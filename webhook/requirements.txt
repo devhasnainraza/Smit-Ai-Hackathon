@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+pymongo
+slowapi
+requests
+python-dotenv
