@@ -22,7 +22,8 @@ export default function OrdersPage() {
   const fetchOrders = async (signal?: AbortSignal) => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8000/api/orders", { signal });
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      const res = await fetch(`${apiBase}/api/orders`, { signal });
       if (!res.ok) throw new Error(`Orders fetch failed: ${res.status}`);
       const data = await res.json();
       setOrders(Array.isArray(data?.orders) ? data.orders : []);
@@ -43,7 +44,8 @@ export default function OrdersPage() {
   const handleStatusChange = async (orderId: number, newStatus: string) => {
     try {
       setUpdatingId(orderId);
-      const res = await fetch(`http://localhost:8000/api/orders/${orderId}/status`, {
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      const res = await fetch(`${apiBase}/api/orders/${orderId}/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
@@ -104,7 +106,10 @@ export default function OrdersPage() {
         </div>
         <div className="flex-1 flex justify-end w-full mt-4 md:mt-0">
           <button
-            onClick={() => window.open("http://localhost:8000/api/orders/export", "_blank")}
+            onClick={() => {
+              const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+              window.open(`${apiBase}/api/orders/export`, "_blank");
+            }}
             className="bg-green-600 text-white px-4 sm:px-6 py-2 rounded-full font-bold shadow hover:bg-green-700 transition text-sm sm:text-base w-full md:w-auto"
           >
             Export Orders (CSV)

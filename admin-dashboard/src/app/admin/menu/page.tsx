@@ -30,7 +30,8 @@ export default function MenuPage() {
   const fetchMenu = async (signal?: AbortSignal) => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:8000/api/menu", { signal });
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      const res = await fetch(`${apiBase}/api/menu`, { signal });
       if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
       const data = await res.json();
       setMenu(Array.isArray(data?.menu) ? data.menu : []);
@@ -81,7 +82,8 @@ export default function MenuPage() {
 
       if (editId !== null) {
         // Edit
-        const res = await fetch(`http://localhost:8000/api/menu/${editId}`, {
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        const res = await fetch(`${apiBase}/api/menu/${editId}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -94,7 +96,8 @@ export default function MenuPage() {
         setMessage("Menu item updated!");
       } else {
         // Add
-        const res = await fetch("http://localhost:8000/api/menu", {
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+        const res = await fetch(`${apiBase}/api/menu`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -126,7 +129,8 @@ export default function MenuPage() {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
     try {
       setDeletingId(item_id);
-      const res = await fetch(`http://localhost:8000/api/menu/${item_id}`, {
+      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      const res = await fetch(`${apiBase}/api/menu/${item_id}`, {
         method: "DELETE",
       });
       if (!res.ok) throw new Error(`Delete failed: ${res.status}`);

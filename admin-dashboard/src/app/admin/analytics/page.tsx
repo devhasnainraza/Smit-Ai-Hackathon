@@ -53,10 +53,11 @@ export default function AnalyticsPage() {
         setLoading(true);
         setError(null);
 
+        const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
         const [salesRes, revenueRes, customersRes] = await Promise.all([
-          fetchJson<ApiSalesResponse>("http://localhost:8000/api/analytics/sales-by-date"),
-          fetchJson<ApiRevenueResponse>("http://localhost:8000/api/analytics/total-revenue"),
-          fetchJson<ApiCustomersResponse>("http://localhost:8000/api/analytics/loyal-customers"),
+          fetchJson<ApiSalesResponse>(`${apiBase}/api/analytics/sales-by-date`),
+          fetchJson<ApiRevenueResponse>(`${apiBase}/api/analytics/total-revenue`),
+          fetchJson<ApiCustomersResponse>(`${apiBase}/api/analytics/loyal-customers`),
         ]);
 
         const salesClean: SalesData[] = Array.isArray(salesRes?.sales)

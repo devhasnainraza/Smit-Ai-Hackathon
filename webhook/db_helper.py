@@ -1,7 +1,10 @@
 import re
+import os
 from pymongo import MongoClient
 
-client = MongoClient("mongodb://localhost:27017/")
+# Get MongoDB URI from environment variable, fallback to local for development
+mongodb_uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
+client = MongoClient(mongodb_uri)
 db = client["food_database"]
 
 def food_item_exists(item_name):
