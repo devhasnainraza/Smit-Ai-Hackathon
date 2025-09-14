@@ -1,8 +1,0 @@
-# MongoDB Configuration
-MONGODB_URI=mongodb://localhost:27017/
-
-# For production, use MongoDB Atlas:
-# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/food_database?retryWrites=true&w=majority
-
-# Add other environment variables as needed
-# API_KEY=your_api_key_here

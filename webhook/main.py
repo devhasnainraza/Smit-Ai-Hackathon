@@ -854,3 +854,8 @@ async def delete_menu_item(request: Request, item_id: int):
             return {"success": False, "message": "Menu item not found."}
     except Exception as e:
         return {"success": False, "message": "Error deleting menu item."}
+
+# Vercel compatibility
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

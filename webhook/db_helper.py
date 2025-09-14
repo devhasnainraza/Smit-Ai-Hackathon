@@ -3,7 +3,7 @@ import os
 from pymongo import MongoClient
 
 # Get MongoDB URI from environment variable, fallback to local for development
-mongodb_uri = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
+mongodb_uri = os.getenv("MONGODB_URI")
 client = MongoClient(mongodb_uri)
 db = client["food_database"]
 
