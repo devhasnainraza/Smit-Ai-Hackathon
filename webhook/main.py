@@ -16,8 +16,8 @@ import json
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv('.env')
+# Load environment variables (optional for Vercel)
+load_dotenv('.env', override=False)
 
 # Import notification system
 from notification_system import NotificationSystem
@@ -854,6 +854,11 @@ async def delete_menu_item(request: Request, item_id: int):
             return {"success": False, "message": "Menu item not found."}
     except Exception as e:
         return {"success": False, "message": "Error deleting menu item."}
+
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    return {"status": "ok", "message": "Webhook is running"}
 
 # Vercel compatibility
 if __name__ == "__main__":
