@@ -2,14 +2,39 @@ import re
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
+import logging
 
-load_dotenv('.env', override=True)
+try:
+    load_dotenv('.env', override=True)
+except Exception as e:
+    logging.warning(f"Could not load .env file: {e}")
 
 MONGODB_URI = os.getenv("MONGODB_URI")
 if not MONGODB_URI:
     raise RuntimeError("MONGODB_URI is not set")
-client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
-db = client["food_database"]
+
+try:
+    client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
+    # Test connection
+    client.admin.command('ping')
+    logging.info("Successfully connected to MongoDB")
+    db = client["food_database"]
+except Exception as e:
+    logging.error(f"Failed to connect to MongoDB: {e}")
+    # Create a fallback db object to prevent app from crashing
+    from pymongo.errors import ServerSelectionTimeoutError
+    class FallbackDB:
+        def __getattr__(self, name):
+            class FallbackCollection:
+                def __getattr__(self, method_name):
+                    def method(*args, **kwargs):
+                        logging.error(f"Database operation {name}.{method_name} failed: MongoDB connection not available")
+                        if method_name in ['find', 'find_one', 'aggregate']:
+                            return []
+                        return None
+                    return method
+            return FallbackCollection()
+    db = FallbackDB()
 
 def food_item_exists(item_name):
     try:

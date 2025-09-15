@@ -17,7 +17,10 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables (optional for Vercel)
-load_dotenv('.env', override=False)
+try:
+    load_dotenv('.env', override=False)
+except Exception as e:
+    logging.warning(f"Could not load .env file: {e}")
 
 # Import notification system
 from notification_system import NotificationSystem
