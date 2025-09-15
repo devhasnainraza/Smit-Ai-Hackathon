@@ -74,7 +74,14 @@ async def global_exception_handler(request, exc):
     logging.error(f"Unhandled error: {exc}", exc_info=True)
     return JSONResponse(status_code=500, content={"fulfillmentText": "Sorry, something went wrong. Please try again later."})
 
-        return JSONResponse(status_code=500, content={"fulfillmentText": "Sorry, something went wrong. Please try again later."})
+@app.get("/")
+async def root():
+    return {"ok": True}
+
+@app.get("/favicon.ico")
+async def favicon():
+    # Avoid 500s on direct browser hits
+    return JSONResponse(status_code=204, content=None)
 
 @app.post("/")
 async def handle_request(request: Request):
