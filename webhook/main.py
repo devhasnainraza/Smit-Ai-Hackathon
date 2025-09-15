@@ -841,20 +841,12 @@ async def delete_menu_item(request: Request, item_id: int):
         return {"success": False, "message": "Error deleting menu item."}
 
 # Health check endpoint
-@app.get("/health")
-async def health_check():
-    return {"status": "ok", "message": "Webhook is running"}
-
-@app.get("/test")
-async def test():
-    return {"status": "ok", "message": "Test endpoint is working", "env_vars": {
-        "mongodb_uri_set": bool(os.getenv("MONGODB_URI")),
-        "msg91_auth_key_set": bool(os.getenv("MSG91_AUTH_KEY")),
-        "whatsapp_token_set": bool(os.getenv("WHATSAPP_TOKEN")),
-        "email_user_set": bool(os.getenv("EMAIL_USER"))
-    }}
-
-# Vercel compatibility
+@app.get("/api/health")
+def health_check():
+    """Simple health check endpoint to verify deployment"""
+    return {"status": "ok", "message": "Service is running"}
+    
+# This is important for Vercel serverless deployment
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)

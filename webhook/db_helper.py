@@ -6,15 +6,18 @@ import logging
 
 try:
     load_dotenv('.env', override=True)
+    logging.info("Loaded .env file successfully")
 except Exception as e:
     logging.warning(f"Could not load .env file: {e}")
 
 MONGODB_URI = os.getenv("MONGODB_URI")
 if not MONGODB_URI:
-    raise RuntimeError("MONGODB_URI is not set")
+    logging.error("MONGODB_URI is not set in environment variables")
+    # Instead of raising an error, set a default or use FallbackDB
+    MONGODB_URI = "mongodb+srv://mhattari1112_db_user:7LQaeA5bndMcgcHj@foodi.wa00elu.mongodb.net/food_database"
 
 try:
-    client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
+    client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=10000, connectTimeoutMS=30000, socketTimeoutMS=45000)
     # Test connection
     client.admin.command('ping')
     logging.info("Successfully connected to MongoDB")
