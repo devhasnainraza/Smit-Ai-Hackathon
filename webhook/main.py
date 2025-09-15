@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Body, Query, Depends
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 import db_helper
 import generic_helper
@@ -74,45 +74,14 @@ async def global_exception_handler(request, exc):
     logging.error(f"Unhandled error: {exc}", exc_info=True)
     return JSONResponse(status_code=500, content={"fulfillmentText": "Sorry, something went wrong. Please try again later."})
 
-# @app.post("/")
-# async def handle_request(request: Request):
-#     try:
-#     payload = await request.json()
-#         logging.info(f"🔔 Received webhook payload: {json.dumps(payload, indent=2)}")
-        
-#     intent = payload['queryResult']['intent']['displayName']
-#     parameters = payload['queryResult']['parameters']
-#     output_contexts = payload['queryResult']['outputContexts']
-#     session_id = generic_helper.extract_session_id(output_contexts[0]["name"])
-        
-#         logging.info(f"🎯 Processing intent: {intent}")
-#         logging.info(f"📝 Session ID: {session_id}")
-#         logging.info(f"📋 Parameters: {parameters}")
+@app.get("/")
+async def root():
+    return {"ok": True}
 
-#     intent_handler_dict = {
-#         'order.add - context: ongoing-order': add_to_order,
-#         'order.remove - context: ongoing-order': remove_from_order,
-#         'order.complete - context: ongoing-order': complete_order,
-#         'track.order - context: ongoing-tracking': track_order,
-#         'order.summary - context: ongoing-order': order_summary_intent,
-#             'collect.phone - context: ongoing-order': collect_phone_number,
-#             'collect.email - context: ongoing-order': collect_email,
-#             'send.notifications - context: ongoing-order': send_notifications,
-#     }
-        
-#     if intent not in intent_handler_dict:
-#             logging.warning(f"❌ Unknown intent: {intent}")
-#         return JSONResponse(content={"fulfillmentText": "Sorry, I didn't understand your request.", "status_code": "error"})
-        
-#         logging.info(f"✅ Found intent handler for: {intent}")
-#         response = intent_handler_dict[intent](parameters, session_id)
-#         logging.info(f"📤 Sending response: {response}")
-        
-#         return response
-        
-#     except Exception as e:
-#         logging.error(f"💥 Error in handle_request: {e}", exc_info=True)
-#         return JSONResponse(status_code=500, content={"fulfillmentText": "Sorry, something went wrong. Please try again later."})
+@app.get("/favicon.ico")
+async def favicon():
+    # 204 must not include a body; return an empty Response
+    return Response(status_code=204)
 
 @app.post("/")
 async def handle_request(request: Request):
