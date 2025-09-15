@@ -11,26 +11,29 @@ class NotificationSystem:
     """Complete notification system using MSG91 (SMS), WhatsApp Business API, and Gmail (Email)"""
     
     def __init__(self): 
-        # MSG91 credentials for SMS
-        self.msg91_auth_key = os.getenv('MSG91_AUTH_KEY')
-        self.msg91_template_id = os.getenv('MSG91_TEMPLATE_ID', 'default_template')
-        self.msg91_sender_id = os.getenv('MSG91_SENDER_ID', 'FOODIB')
-        
-        # WhatsApp Business API credentials
-        self.whatsapp_token = os.getenv('WHATSAPP_TOKEN')
-        self.whatsapp_phone_id = os.getenv('WHATSAPP_PHONE_ID')
-        
-        # GreenAPI credentials for WhatsApp (fallback)
-        self.greenapi_instance_id = os.getenv('GREENAPI_INSTANCE_ID')
-        self.greenapi_token = os.getenv('GREENAPI_TOKEN')
-        
-        # Email credentials (Gmail)
-        self.email_user = os.getenv('EMAIL_USER')
-        self.email_password = os.getenv('EMAIL_PASSWORD')
-        self.smtp_server = 'smtp.gmail.com'
-        self.smtp_port = 587
-        
-        logging.info("Notification system initialized with MSG91 SMS, WhatsApp Business API, and Gmail Email")
+        try:
+            # MSG91 credentials for SMS
+            self.msg91_auth_key = os.getenv('MSG91_AUTH_KEY')
+            self.msg91_template_id = os.getenv('MSG91_TEMPLATE_ID', 'default_template')
+            self.msg91_sender_id = os.getenv('MSG91_SENDER_ID', 'FOODIB')
+            
+            # WhatsApp Business API credentials
+            self.whatsapp_token = os.getenv('WHATSAPP_TOKEN')
+            self.whatsapp_phone_id = os.getenv('WHATSAPP_PHONE_ID')
+            
+            # Email credentials (Gmail)
+            self.email_user = os.getenv('EMAIL_USER')
+            self.email_password = os.getenv('EMAIL_PASSWORD')
+            self.smtp_server = 'smtp.gmail.com'
+            self.smtp_port = 587
+            
+            logging.info("Notification system initialized with available credentials")
+        except Exception as e:
+            logging.error(f"Error initializing NotificationSystem: {e}")
+            # Set defaults to prevent NoneType errors
+            self.msg91_auth_key = None
+            self.whatsapp_token = None
+            self.email_user = None
     
     def send_sms(self, to_number: str, message: str) -> Dict:
         """Send SMS using MSG91"""
@@ -549,4 +552,4 @@ if __name__ == "__main__":
     
     # Send order confirmation
     results = notifications.send_order_confirmation(user_info, order_details)
-    print(f"Order confirmation results: {results}") 
+    print(f"Order confirmation results: {results}")

@@ -16,23 +16,36 @@ import json
 import os
 from dotenv import load_dotenv
 
+# Configure logging first
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.StreamHandler()]
+)
+
 # Load environment variables (optional for Vercel)
 try:
     load_dotenv('.env', override=False)
+    logging.info("Loaded .env file successfully")
 except Exception as e:
     logging.warning(f"Could not load .env file: {e}")
+
+# Log environment variables (without sensitive values)
+logging.info(f"MONGODB_URI set: {bool(os.getenv('MONGODB_URI'))}")
+logging.info(f"MSG91_AUTH_KEY set: {bool(os.getenv('MSG91_AUTH_KEY'))}")
+logging.info(f"WHATSAPP_TOKEN set: {bool(os.getenv('WHATSAPP_TOKEN'))}")
+logging.info(f"EMAIL_USER set: {bool(os.getenv('EMAIL_USER'))}")
 
 # Import notification system
 from notification_system import NotificationSystem
 
-# Initialize notification system
-notifications = NotificationSystem()
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.FileHandler("bot.log"), logging.StreamHandler()]
-)
+# Initialize notification system with error handling
+try:
+    notifications = NotificationSystem()
+    logging.info("NotificationSystem initialized successfully")
+except Exception as e:
+    logging.error(f"Failed to initialize NotificationSystem: {e}")
+    notifications = None
 
 app = FastAPI()
 
@@ -831,6 +844,15 @@ async def delete_menu_item(request: Request, item_id: int):
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "message": "Webhook is running"}
+
+@app.get("/test")
+async def test():
+    return {"status": "ok", "message": "Test endpoint is working", "env_vars": {
+        "mongodb_uri_set": bool(os.getenv("MONGODB_URI")),
+        "msg91_auth_key_set": bool(os.getenv("MSG91_AUTH_KEY")),
+        "whatsapp_token_set": bool(os.getenv("WHATSAPP_TOKEN")),
+        "email_user_set": bool(os.getenv("EMAIL_USER"))
+    }}
 
 # Vercel compatibility
 if __name__ == "__main__":
