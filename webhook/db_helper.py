@@ -14,7 +14,7 @@ MONGODB_URI = os.getenv("MONGODB_URI")
 if not MONGODB_URI:
     logging.error("MONGODB_URI is not set in environment variables")
     # Instead of raising an error, set a default or use FallbackDB
-    MONGODB_URI = "mongodb+srv://mhattari1112_db_user:7LQaeA5bndMcgcHj@foodi.wa00elu.mongodb.net/food_database"
+    MONGODB_URI = "mongodb+srv://mhattari1112_db_user:7LQaeA5bndMcgcHj@foodi.wa00elu.mongodb.net/"
 
 try:
     client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=10000, connectTimeoutMS=30000, socketTimeoutMS=45000)
