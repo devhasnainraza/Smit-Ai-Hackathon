@@ -4,4 +4,4 @@ pymongo
 slowapi
 requests
 python-dotenv
-gunicorn
+dnspython
