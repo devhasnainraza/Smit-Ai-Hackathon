@@ -3,7 +3,7 @@ import os
 from pymongo import MongoClient
 
 # Get MongoDB URI from environment variable, fallback to Atlas for development
-mongodb_uri = os.getenv("MONGODB_URI", "mongodb+srv://mhattari1112_db_user:7LQaeA5bndMcgcHj@foodi.wa00elu.mongodb.net/food_database")
+mongodb_uri = os.getenv("MONGODB_URI")
 client = MongoClient(mongodb_uri)
 db = client["food_database"]
 
