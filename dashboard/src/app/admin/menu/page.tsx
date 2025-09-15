@@ -33,8 +33,8 @@ export default function MenuPage() {
       if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
       const data = await res.json();
       setMenu(Array.isArray(data?.menu) ? data.menu : []);
-    } catch (err: any) {
-      if (err?.name !== "AbortError") {
+    } catch (err: Error | unknown) {
+      if ((err as Error)?.name !== "AbortError") {
         console.error("Failed to fetch menu:", err);
         setMessage("Failed to load menu. Please try again.");
       }
