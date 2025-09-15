@@ -2,9 +2,10 @@ import re
 import os
 from pymongo import MongoClient
 
-# Get MongoDB URI from environment variable, fallback to Atlas for development
-mongodb_uri = os.getenv("MONGODB_URI")
-client = MongoClient(mongodb_uri)
+MONGODB_URI = os.getenv("MONGODB_URI")
+if not MONGODB_URI:
+raise RuntimeError("MONGODB_URI is not set")
+client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=5000)
 db = client["food_database"]
 
 def food_item_exists(item_name):
