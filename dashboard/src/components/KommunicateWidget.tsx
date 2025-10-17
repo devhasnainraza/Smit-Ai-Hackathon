@@ -25,7 +25,7 @@ export default function KommunicateWidget() {
     }
 
     const kommunicateSettings = {
-      appId: "3b114357bac168e801354978add7a0200",
+      appId: "36f36700de5e21413049a67c4d8e991c",
       popupWidget: true,
       automaticChatOpenOnNavigation: true,
     };
